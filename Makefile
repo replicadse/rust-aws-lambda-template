@@ -13,7 +13,7 @@ clean:
 	cargo clean
 
 build:
-	cargo build --release --target x86_64-unknown-linux-musl
+	CC_x86_64_unknown_linux_musl="x86_64-linux-musl-gcc" cargo build --release --target x86_64-unknown-linux-musl
 	zip -j target/bootstrap.zip ./target/x86_64-unknown-linux-musl/release/bootstrap
 
 test:
