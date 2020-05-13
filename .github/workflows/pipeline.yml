@@ -27,7 +27,7 @@ jobs:
     - name: Execute tests
       run: make test
     - name: Build function
-      run: make build
+      run: GCC=musl-gcc make build
 
   tag:
     if: github.ref == 'refs/heads/master'

@@ -1,3 +1,7 @@
+ifndef GCC
+	GCC := x86_64-linux-musl-gcc
+endif
+
 .PHONY: init update-version clean build test cover open-coverage-html scan
 
 init:
@@ -13,7 +17,7 @@ clean:
 	cargo clean
 
 build:
-	CC_x86_64_unknown_linux_musl="x86_64-linux-musl-gcc" cargo build --release --target x86_64-unknown-linux-musl
+	CC_x86_64_unknown_linux_musl=$(GCC) cargo build --release --target x86_64-unknown-linux-musl
 	zip -j target/bootstrap.zip ./target/x86_64-unknown-linux-musl/release/bootstrap
 
 test:
