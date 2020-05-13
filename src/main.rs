@@ -11,9 +11,9 @@ use lambda::error::HandlerError;
 use std::error::Error;
 
 #[derive(Deserialize, Clone)]
+#[serde(rename_all = "snake_case")]
 struct CustomEvent {
-    #[serde(rename = "firstName")]
-    first_name: String,
+    name: String,
 }
 
 #[derive(Serialize, Clone)]
@@ -23,18 +23,16 @@ struct CustomOutput {
 
 fn main() -> Result<(), Box<dyn Error>> {
     simple_logger::init_with_level(log::Level::Info)?;
-    lambda!(my_handler);
-
+    lambda!(handler);
     Ok(())
 }
 
-fn my_handler(e: CustomEvent, c: lambda::Context) -> Result<CustomOutput, HandlerError> {
-    if e.first_name == "" {
+fn handler(e: CustomEvent, c: lambda::Context) -> Result<CustomOutput, HandlerError> {
+    if e.name == "" {
         error!("Empty first name in request {}", c.aws_request_id);
         return Err(c.new_error("Empty first name"));
     }
-
     Ok(CustomOutput {
-        message: format!("Hello, {}!", e.first_name),
+        message: format!("Hello, {}!", e.name),
     })
 }
