@@ -63,18 +63,35 @@ jobs:
         name: RELEASE
         path: ${{ env.RELEASE_FILE }}
 
-  # publish-cratesio:
-  #   needs: tag
-  #   name: crates.io
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v1
-  #   - name: Get version
-  #     id: get_version
-  #     run: echo ::set-output name=VERSION::$(git tag --points-at HEAD --sort -version:refname | head -1)
-  #   - name: Publish
-  #     id: publish
-  #     run: |
-  #       VERSION=${{ steps.get_version.outputs.VERSION }} make update-version && 
-  #       cargo login ${{ secrets.CRATES_IO_TOKEN }} && 
-  #       cargo publish --allow-dirty
+  publish:
+    needs: tag
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Get version
+      id: get_version
+      run: echo ::set-output name=VERSION::$(git tag --points-at HEAD --sort -version:refname | head -1)
+    - name: Download release id
+      uses: actions/download-artifact@v1.0.0
+      with:
+        name: RELEASE
+    - name: Get release data
+      id: get_release_data
+      run: echo ::set-output name=upload_url::$(cat RELEASE/${{ env.RELEASE_FILE }})
+    - name: Update version
+      run: VERSION=${{ steps.get_version.outputs.VERSION }} make update-version
+    - name: Ensure musl is installed
+      run: sudo apt-get install -y musl musl-dev musl-tools
+    - name: Ensure that x86_64-unknown-linux-musl target is installed
+      run: rustup target add x86_64-unknown-linux-musl
+    - name: Build function
+      run: GCC=musl-gcc make build
+    - name: upload asset
+      uses: svenstaro/upload-release-action@v1-release
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./target/bootstrap.zip
+        asset_name: bootstrap.zip
+        tag: ${{ steps.get_version.outputs.VERSION }}
+        overwrite: true
