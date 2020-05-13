@@ -1,4 +1,4 @@
-.PHONY: init update-version clean build test cover open-coverage-html scan release
+.PHONY: init update-version clean build test cover open-coverage-html scan
 
 init:
 	rm -rf .git/hooks
@@ -13,7 +13,8 @@ clean:
 	cargo clean
 
 build:
-	cargo build
+	cargo build --release --target x86_64-unknown-linux-musl
+	zip -j target/bootstrap.zip ./target/x86_64-unknown-linux-musl/release/bootstrap
 
 test:
 	cargo test -- --nocapture
@@ -30,6 +31,3 @@ open-coverage-html:
 
 scan:
 	cargo clippy --all-targets --all-features -- -D warnings
-
-release:
-	cargo build --release

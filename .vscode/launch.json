@@ -13,10 +13,10 @@
                     "test",
                     "--no-run",
                     "--lib",
-                    "--package=rust-template"
+                    "--package=rust-aws-lambda-template"
                 ],
                 "filter": {
-                    "name": "rust-template",
+                    "name": "rust-aws-lambda-template",
                     "kind": "lib"
                 }
             },
@@ -26,13 +26,13 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug integration test 'tests'",
+            "name": "Debug integration test",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
                     "--test=tests",
-                    "--package=rust-template"
+                    "--package=rust-aws-lambda-template"
                 ],
                 "filter": {
                     "name": "tests",

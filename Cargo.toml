@@ -1,14 +1,15 @@
 [package]
-name = "rust-template"
+name = "rust-aws-lambda-template"
 version = "0.0.0"
 authors = ["Heiko Alexander Weber <heiko.a.weber@gmail.com>"]
+autobins = false
 edition = "2018"
 license = "MIT"
-description = "A rust template repository"
+description = "A rust aws-lambda template repository"
 readme = "docs/README.md"
-homepage = "https://replicadse.github.io/rust-template/"
-repository = "https://github.com/replicadse/rust-template"
-keywords = ["template"]
+homepage = "https://replicadse.github.io/rust-aws-lambda-template/"
+repository = "https://github.com/replicadse/rust-aws-lambda-template"
+keywords = ["aws", "lambda", "template"]
 categories = []
 
 
@@ -18,4 +19,14 @@ categories = []
   [release]
     opt-level = 3
 
-[dev-dependencies]
+[dependencies]
+lambda_runtime = "^0.1"
+serde = "^1"
+serde_json = "^1"
+serde_derive = "^1"
+log = "^0.4"
+simple_logger = "^1"
+
+[[bin]]
+name = "bootstrap"
+path = "src/main.rs"
