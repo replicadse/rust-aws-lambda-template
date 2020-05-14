@@ -10,13 +10,13 @@ use lambda::error::HandlerError;
 
 use std::error::Error;
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "snake_case")]
 struct CustomEvent {
-    name: String,
+    the_name: String,
 }
 
-#[derive(Serialize, Clone)]
+#[derive(Debug, Serialize, Clone)]
 struct CustomOutput {
     message: String,
 }
@@ -27,12 +27,20 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn handler(e: CustomEvent, c: lambda::Context) -> Result<CustomOutput, HandlerError> {
-    if e.name == "" {
-        error!("Empty first name in request {}", c.aws_request_id);
-        return Err(c.new_error("Empty first name"));
+fn handler(e: serde_json::Value, c: lambda::Context) -> Result<CustomOutput, HandlerError> {
+    match std::panic::catch_unwind(|| {
+        let event: CustomEvent = serde_json::from_value(e).unwrap();
+        info!("{:?}", event);
+
+        if event.the_name == "" {
+            error!("Empty first name in request {}", c.aws_request_id);
+            return Err(c.new_error("Empty first name"));
+        }
+        Ok(CustomOutput {
+            message: format!("Hello, {}!", event.the_name),
+        })
+    }) {
+        Ok(x) => x,
+        Err(_) => Err(c.new_error("panic")),
     }
-    Ok(CustomOutput {
-        message: format!("Hello, {}!", e.name),
-    })
 }
