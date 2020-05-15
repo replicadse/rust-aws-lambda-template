@@ -29,7 +29,7 @@
     2) Add new event that contains following JSON data:
         ```
             {
-                "firstName": "Raymond"
+                "the_name": "Raymond"
             }
         ```
     3) Invoke the newly created test event
