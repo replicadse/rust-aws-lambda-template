@@ -17,7 +17,7 @@ clean:
 	cargo clean
 
 build:
-	CC_x86_64_unknown_linux_musl=$(GCC) cargo build --release --target x86_64-unknown-linux-musl
+	CC_x86_64_unknown_linux_musl=$(GCC) RUSTFLAGS="-C linker=$(GCC)" cargo build --release --target x86_64-unknown-linux-musl
 	zip -j target/bootstrap.zip ./target/x86_64-unknown-linux-musl/release/bootstrap
 
 test:
