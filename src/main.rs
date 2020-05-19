@@ -6,8 +6,9 @@ extern crate serde_derive;
 extern crate log;
 extern crate simple_logger;
 
-use std::error::Error;
 use lambda::error::HandlerError;
+
+use std::error::Error;
 
 #[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "snake_case")]
